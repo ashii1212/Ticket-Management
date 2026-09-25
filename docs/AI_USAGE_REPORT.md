@@ -12,6 +12,9 @@ GitHub Copilot (for inline code autocomplete) and ChatGPT (GPT-4o) (for architec
 5. Suggest an algorithm for calculating SLA pause times when a ticket is in the PENDING_STUDENT state.
 6. Generate dummy seed data (names, ticket titles) for the database.
 7. Help debug a MapStruct annotation processor issue in the `pom.xml`.
+8. Write the base Vite and Tailwind CSS configuration files.
+9. Generate regex patterns for strong password validation.
+10. Scaffold responsive CSS Grid layouts for the admin dashboard metric cards.
 
 ## Most Useful Prompt
 The most effective prompts in ChatGPT were those where I provided the exact state machine transitions explicitly (e.g., "Write a Java method that validates transitions where NEW -> ASSIGNED is allowed, but NEW -> RESOLVED is blocked") rather than asking open-ended implementation questions. 
@@ -22,18 +25,29 @@ The most effective prompts in ChatGPT were those where I provided the exact stat
 - Standard Spring Security filter chain setup
 - Repetitive UI components (Tailwind classes for badges, table rows) via Copilot
 - Recharts boilerplate for the admin dashboard
+- Boilerplate JUnit setup and mock initializations
 
 ## Code I Modified
-- SLA pause logic: ChatGPT initially suggested an approach that did not correctly accumulate `activeMinutesElapsed` across multiple PENDING cycles. I rewrote the accumulation logic in the service layer to correctly handle multiple pending/resume cycles safely.
-- Ticket number generation: Copilot suggested a `max(id)+1` approach that has a race condition in concurrent environments. I replaced it with a thread-safe sequence logic.
-- Internal note filtering: I had to move the comment filtering logic out of the controller (where ChatGPT placed it) and down into the repository query level to ensure security is enforced at the database layer.
-- Seed data: I heavily modified the AI-generated seed data to include SLA-breached tickets (past `slaDeadline`) and specific pending reasons to make the charts and ageing dashboards meaningful for the evaluator.
+- **SLA pause logic:** ChatGPT initially suggested an approach that did not correctly accumulate `activeMinutesElapsed` across multiple PENDING cycles. I rewrote the accumulation logic in the service layer to correctly handle multiple pending/resume cycles safely.
+- **N+1 Query Optimization:** Copilot auto-generated a ticket fetch query that caused an N+1 select problem when retrieving associated students and staff. I manually added `@EntityGraph(attributePaths = {"student", "assignedStaff", "category"})` to optimize the database calls.
+- **Ticket number generation:** Copilot suggested a `max(id)+1` approach that has a race condition in concurrent environments. I replaced it with a thread-safe sequence logic.
+- **React Context Re-renders:** The AI-generated React Context for Authentication was causing unnecessary re-renders across the whole app. I refactored it to memoize the context values using `useMemo`.
+- **Form Validation:** ChatGPT missed the requirement that a ticket title shouldn't just be whitespace. I updated the Zod schema from simple `.min(1)` to `.trim().min(5, "Title must be at least 5 characters")`.
+- **Internal note filtering:** I had to move the comment filtering logic out of the controller (where ChatGPT placed it) and down into the repository query level to ensure security is enforced at the database layer.
+- **Seed data:** I heavily modified the AI-generated seed data to include SLA-breached tickets (past `slaDeadline`) and specific pending reasons to make the charts and ageing dashboards meaningful for the evaluator.
 
 ## AI Output That Was Wrong
+
+**Issue 1: Deprecated Security API**
 ChatGPT generated the JWT implementation using the deprecated jjwt 0.9.x API (using `Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody()`). My project uses the modern jjwt 0.12.x which has a completely different API.
 
+**Issue 2: Incorrect REST Methods**
+Copilot suggested using `@PutMapping` for ticket state transition endpoints (like escalating or resolving a ticket). 
+
 ## How I Identified The Problem
-Maven compilation failed with method not found errors on `setSigningKey` and `parseClaimsJws`. I checked the jjwt 0.12.x migration guide.
+- **Issue 1:** Maven compilation failed with method not found errors on `setSigningKey` and `parseClaimsJws`. I checked the jjwt 0.12.x migration guide.
+- **Issue 2:** During my own code review, I realized that using `PUT` for state transitions violates REST principles, as these are business actions, not idempotent resource replacements.
 
 ## How I Fixed It
-I manually updated the code to use the secure 0.12.x API: `Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload()` and used `Keys.hmacShaKeyFor(secret.getBytes())` for key construction.
+- **Issue 1:** I manually updated the code to use the secure 0.12.x API: `Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload()` and used `Keys.hmacShaKeyFor(secret.getBytes())` for key construction.
+- **Issue 2:** I changed the transition endpoints to use `@PostMapping` (e.g., `POST /api/tickets/{id}/escalate`) to properly reflect RPC-style state changes in a RESTful manner.
