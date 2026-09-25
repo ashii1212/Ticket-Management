@@ -103,9 +103,9 @@ export const LoginPage: React.FC = () => {
           <div className="mt-6 bg-slate-50 p-4 rounded-md text-xs text-slate-500 border border-slate-200">
             <p className="font-semibold mb-1">Demo Credentials (dev only):</p>
             <ul className="space-y-1">
-              <li>student@demo.com / pass</li>
-              <li>staff@demo.com / pass</li>
-              <li>admin@demo.com / pass</li>
+              <li>student01@demo.com / password123</li>
+              <li>staff1@demo.com / password123</li>
+              <li>admin@demo.com / password123</li>
             </ul>
           </div>
         </div>

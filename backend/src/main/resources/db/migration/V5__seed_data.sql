@@ -1,17 +1,17 @@
 
 -- Admin
 INSERT INTO users (name, email, password_hash, role, created_at, updated_at) 
-VALUES ('System Admin', 'admin@demo.com', '$2a$10$slYQmyNdgTY18LqVr0a5L.E7FxGaBdHFkznBDqgH3OmVaFOkKiHby', 'ADMIN', NOW(), NOW());
+VALUES ('System Admin', 'admin@demo.com', '$2b$10$a9N7MwQ0H/K0lrXCtXDdhuR8HtwoAyqyQBW4hLfOVDJkzZfYO2ovu', 'ADMIN', NOW(), NOW());
 
 -- Staff
 INSERT INTO users (name, email, password_hash, role, created_at, updated_at) 
-VALUES ('Staff One', 'staff1@demo.com', '$2a$10$slYQmyNdgTY18LqVr0a5L.E7FxGaBdHFkznBDqgH3OmVaFOkKiHby', 'STAFF', NOW(), NOW()),
-       ('Staff Two', 'staff2@demo.com', '$2a$10$slYQmyNdgTY18LqVr0a5L.E7FxGaBdHFkznBDqgH3OmVaFOkKiHby', 'STAFF', NOW(), NOW());
+VALUES ('Staff One', 'staff1@demo.com', '$2b$10$a9N7MwQ0H/K0lrXCtXDdhuR8HtwoAyqyQBW4hLfOVDJkzZfYO2ovu', 'STAFF', NOW(), NOW()),
+       ('Staff Two', 'staff2@demo.com', '$2b$10$a9N7MwQ0H/K0lrXCtXDdhuR8HtwoAyqyQBW4hLfOVDJkzZfYO2ovu', 'STAFF', NOW(), NOW());
 
 -- Students
 INSERT INTO users (name, email, password_hash, role, created_at, updated_at)
-VALUES ('Student One', 'student01@demo.com', '$2a$10$slYQmyNdgTY18LqVr0a5L.E7FxGaBdHFkznBDqgH3OmVaFOkKiHby', 'STUDENT', NOW(), NOW()),
-       ('Student Two', 'student02@demo.com', '$2a$10$slYQmyNdgTY18LqVr0a5L.E7FxGaBdHFkznBDqgH3OmVaFOkKiHby', 'STUDENT', NOW(), NOW());
+VALUES ('Student One', 'student01@demo.com', '$2b$10$a9N7MwQ0H/K0lrXCtXDdhuR8HtwoAyqyQBW4hLfOVDJkzZfYO2ovu', 'STUDENT', NOW(), NOW()),
+       ('Student Two', 'student02@demo.com', '$2b$10$a9N7MwQ0H/K0lrXCtXDdhuR8HtwoAyqyQBW4hLfOVDJkzZfYO2ovu', 'STUDENT', NOW(), NOW());
 
 -- Categories
 INSERT INTO ticket_categories (name, description, created_at, updated_at) VALUES 
