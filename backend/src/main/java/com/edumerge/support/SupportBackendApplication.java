@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
+@EnableJpaAuditing
 @EnableScheduling
 public class SupportBackendApplication {
     public static void main(String[] args) {
